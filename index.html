@@ -205,12 +205,12 @@
   }
   .progress-fill {
     height: 100%;
-    width: 35%;
+    width: 0%;
     background: var(--rose);
     border-radius: 2px;
-    animation: prog 20s linear infinite;
   }
-  @keyframes prog {
+  
+  @keyframes progAnimate {
     from { width: 0%; }
     to { width: 100%; }
   }
@@ -383,22 +383,6 @@
     width: 100%;
     margin: 2rem 0;
   }
-  .photo-slot {
-    aspect-ratio: 4/3;
-    background: rgba(30, 5, 15, 0.7);
-    border: 1px solid rgba(196, 84, 122, 0.2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 8px;
-    color: rgba(245, 232, 228, 0.3);
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  .photo-slot span { font-size: 28px; }
   .photo-caption {
     font-family: 'Playfair Display', serif;
     font-style: italic;
@@ -469,7 +453,6 @@
 
 <canvas id="petals-canvas"></canvas>
 
-<!-- OPENING SCREEN -->
 <div id="opening">
   <div class="gift-wrap" onclick="openGift()">
     <div class="gift-box" id="giftBox">🎁</div>
@@ -494,28 +477,8 @@
   </div>
 </div>
 
-<script>
-// Fungsi pengatur jalannya musik secara nyata
-let playing = false; 
-function togglePlay() {
-  playing = !playing;
-  const audio = document.getElementById('audioLagu');
-  document.getElementById('playBtn').textContent = playing ? '⏸' : '▶';
-  const fill = document.getElementById('progFill');
-  fill.style.animationPlayState = playing ? 'running' : 'paused';
-  
-  if (playing) {
-    audio.play().catch(err => console.log("Menunggu klik user untuk memutar musik."));
-  } else {
-    audio.pause();
-  }
-}
-</script>
-
-<!-- MAIN CONTENT -->
 <div id="content">
 
-  <!-- HERO -->
   <section id="hero">
     <div class="reveal">
       <div class="scroll-hint">scroll to discover</div>
@@ -535,7 +498,6 @@ function togglePlay() {
     </div>
   </section>
 
-  <!-- CARDS -->
   <section id="cards-section">
     <div class="cards-label reveal">
       <span class="section-label">things I love about Sarah</span>
@@ -575,7 +537,6 @@ function togglePlay() {
     </div>
   </section>
 
-  <!-- GARDEN -->
   <section id="garden">
     <div class="reveal">
       <span class="section-label">our secret garden</span>
@@ -589,8 +550,7 @@ function togglePlay() {
     </div>
   </section>
 
-  <!-- PHOTOS -->
- <section id="photos">
+  <section id="photos">
     <div class="reveal">
       <span class="section-label">our moments</span>
       <h2 class="section-title" style="text-align:center; margin-bottom: 0;">So Beautiful</h2>
@@ -608,7 +568,6 @@ function togglePlay() {
     </div>
   </section>
 
-  <!-- CLOSING -->
   <section id="closing">
     <div class="reveal">
       <div class="flower-row" style="font-size:16px; letter-spacing:6px;">🌸 🌹 🌸 🌸 🌹</div>
@@ -692,7 +651,7 @@ window.addEventListener('resize', resize);
 initPetals();
 animatePetals();
 
-// GIFT OPEN
+// LOGIKA PEMBUKAAN KADO (GIFT OPEN)
 let opened = false;
 function openGift() {
   if (opened) return;
@@ -711,10 +670,18 @@ function openGift() {
     document.getElementById('content').classList.add('visible');
     document.getElementById('player').classList.add('show');
     initReveal();
+    
+    // Otomatis mainkan lagu saat kado dibuka
+    playing = true;
+    const audio = document.getElementById('audioLagu');
+    document.getElementById('playBtn').textContent = '⏸';
+    const fill = document.getElementById('progFill');
+    fill.style.animation = 'progAnimate 20s linear infinite';
+    audio.play().catch(err => console.log("Playback dicegah oleh browser sebelum interaksi nyata."));
   }, 1400);
 }
 
-// Burst effect
+// Efek ledakan partikel bunga (Burst effect)
 function burst() {
   for (let i = 0; i < 20; i++) {
     const p = createPetal();
@@ -726,7 +693,7 @@ function burst() {
   }
 }
 
-// SCROLL REVEAL
+// LOGIKA ANIMASI SCROLL (SCROLL REVEAL)
 function initReveal() {
   const items = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver((entries) => {
@@ -741,19 +708,28 @@ function initReveal() {
     el.style.transitionDelay = (i % 4) * 0.12 + 's';
     obs.observe(el);
   });
-  // Trigger hero immediately
+  // Aktifkan bagian hero langsung saat transisi pembukaan kado selesai
   setTimeout(() => {
     document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('in'));
   }, 300);
 }
 
-// MUSIC PLAYER
-let playing = true;
+// LOGIKA TOMBOL PLAY/PAUSE MUSIK SECARA MANUAL
+let playing = false;
 function togglePlay() {
   playing = !playing;
+  const audio = document.getElementById('audioLagu');
   document.getElementById('playBtn').textContent = playing ? '⏸' : '▶';
   const fill = document.getElementById('progFill');
-  fill.style.animationPlayState = playing ? 'running' : 'paused';
+  
+  if (playing) {
+    fill.style.animation = 'progAnimate 20s linear infinite';
+    fill.style.animationPlayState = 'running';
+    audio.play().catch(err => console.log("Menunggu interaksi pengguna."));
+  } else {
+    fill.style.animationPlayState = 'paused';
+    audio.pause();
+  }
 }
 </script>
 </body>
