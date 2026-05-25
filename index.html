@@ -462,7 +462,7 @@
 </div>
 
 <div id="player">
-  <audio id="audioLagu" src="love.mp3" loop></audio> 
+  <audio id="audioLagu" src="https://pub-c5e31b5cdafb419a86a69d5d340a955c.r2.dev/wave%20to%20earth%20-%20love%20(Official%20Audio).mp3" loop></audio> 
   
   <div class="player-cover">🎵</div>
   <div class="player-info">
@@ -673,17 +673,16 @@ function openGift() {
     document.getElementById('player').classList.add('show');
     initReveal();
     
-    // Otomatis mainkan lagu saat kado dibuka
+    // Memicu lagu otomatis begitu kado diklik
     playing = true;
     const audio = document.getElementById('audioLagu');
     document.getElementById('playBtn').textContent = '⏸';
     const fill = document.getElementById('progFill');
     fill.style.animation = 'progAnimate 20s linear infinite';
-    audio.play().catch(err => console.log("Autoplay ditolak browser. User harus klik manual."));
+    audio.play().catch(err => console.log("Autoplay ditolak sistem privasi browser. User harus memicu interaksi manual."));
   }, 1400);
 }
 
-// Efek ledakan partikel bunga (Burst effect)
 function burst() {
   for (let i = 0; i < 20; i++) {
     const p = createPetal();
@@ -695,7 +694,6 @@ function burst() {
   }
 }
 
-// LOGIKA ANIMASI SCROLL (SCROLL REVEAL)
 function initReveal() {
   const items = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver((entries) => {
@@ -710,13 +708,12 @@ function initReveal() {
     el.style.transitionDelay = (i % 4) * 0.12 + 's';
     obs.observe(el);
   });
-  // Aktifkan bagian hero langsung saat transisi pembukaan kado selesai
   setTimeout(() => {
     document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('in'));
   }, 300);
 }
 
-// LOGIKA TOMBOL PLAY/PAUSE MUSIK SECARA MANUAL
+// LOGIKA TOMBOL PLAY/PAUSE MUSIK MANUAL
 function togglePlay() {
   playing = !playing;
   const audio = document.getElementById('audioLagu');
